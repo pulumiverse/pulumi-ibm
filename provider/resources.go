@@ -68,8 +68,8 @@ func Provider() tfbridge.ProviderInfo {
 		LogoURL: "",
 		// PluginDownloadURL is an optional URL used to download the Provider
 		// for use in Pulumi programs
-		// e.g https://github.com/org/pulumi-provider-name/releases/
-		PluginDownloadURL: "",
+		// https://www.pulumi.com/docs/guides/pulumi-packages/how-to-author/#support-for-github-releases
+		PluginDownloadURL: "github://api.github.com/pulumiverse",
 		Description:       "A Pulumi package for creating and managing ibm cloud resources.",
 		// category/cloud tag helps with categorizing the package in the Pulumi Registry.
 		// For all available categories, see `Keywords` in
