@@ -1,0 +1,384 @@
+{
+    "name": "ibm",
+    "displayName": "IBM Cloud",
+    "description": "A Pulumi package for creating and managing IBM Cloud resources.",
+    "keywords": [
+        "pulumi",
+        "ibm",
+        "category/cloud"
+    ],
+    "homepage": "https://github.com/pulumiverse/",
+    "license": "Apache-2.0",
+    "attribution": "This Pulumi package is based on the [`ibm` Terraform Provider](https://github.com/ibm-cloud/terraform-provider-ibm).",
+    "repository": "https://github.com/pulumiverse/pulumi-ibm",
+    "logoUrl": "https://raw.githubusercontent.com/pulumiverse/.github/main/assets/mascot.png",
+    "pluginDownloadURL": "github://api.github.com/pulumiverse",
+    "publisher": "Pulumiverse",
+    "meta": {
+        "moduleFormat": "(.*)(?:/[^/]*)"
+    },
+    "language": {
+        "csharp": {
+            "compatibility": "tfbridge20",
+            "namespaces": null,
+            "packageReferences": {
+                "Pulumi": "3.*"
+            },
+            "rootNamespace": "Pulumiverse"
+        },
+        "go": {
+            "generateExtraInputTypes": true,
+            "generateResourceContainerTypes": true,
+            "importBasePath": "github.com/pulumiverse/pulumi-ibm/sdk/go/ibm"
+        },
+        "nodejs": {
+            "compatibility": "tfbridge20",
+            "dependencies": {
+                "@pulumi/pulumi": "^3.0.0"
+            },
+            "devDependencies": {
+                "@types/mime": "^2.0.0",
+                "@types/node": "^10.0.0"
+            },
+            "disableUnionOutputTypes": true,
+            "packageDescription": "A Pulumi package for creating and managing IBM Cloud resources.",
+            "packageName": "@pulumiverse/ibm",
+            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/ibm-cloud/terraform-provider-ibm)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi/pulumi-ibm` repo](https://github.com/pulumi/pulumi-ibm/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`ibm-cloud/terraform-provider-ibm` repo](https://github.com/ibm-cloud/terraform-provider-ibm/issues).",
+            "typescriptVersion": ""
+        },
+        "python": {
+            "compatibility": "tfbridge20",
+            "packageName": "pulumiverse_ibm",
+            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/ibm-cloud/terraform-provider-ibm)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi/pulumi-ibm` repo](https://github.com/pulumi/pulumi-ibm/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`ibm-cloud/terraform-provider-ibm` repo](https://github.com/ibm-cloud/terraform-provider-ibm/issues).",
+            "requires": {
+                "pulumi": "\u003e=3.0.0,\u003c4.0.0"
+            }
+        }
+    },
+    "config": {
+        "variables": {
+            "bluemixApiKey": {
+                "type": "string",
+                "description": "The Bluemix API Key\n",
+                "deprecationMessage": "This field is deprecated please use ibmcloud_api_key"
+            },
+            "bluemixTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any Bluemix API calls made.\n",
+                "deprecationMessage": "This field is deprecated please use ibmcloud_timeout"
+            },
+            "endpointsFilePath": {
+                "type": "string",
+                "description": "Path of the file that contains private and public regional endpoints mapping\n"
+            },
+            "functionNamespace": {
+                "type": "string",
+                "description": "The IBM Cloud Function namespace\n",
+                "deprecationMessage": "This field will be deprecated soon"
+            },
+            "generation": {
+                "type": "integer",
+                "description": "Generation of Virtual Private Cloud. Default is 2\n",
+                "deprecationMessage": "The generation field is deprecated and will be removed after couple of releases"
+            },
+            "iaasClassicApiKey": {
+                "type": "string",
+                "description": "The Classic Infrastructure API Key\n"
+            },
+            "iaasClassicEndpointUrl": {
+                "type": "string",
+                "description": "The Classic Infrastructure Endpoint\n"
+            },
+            "iaasClassicTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any Classic Infrastructure API calls made.\n"
+            },
+            "iaasClassicUsername": {
+                "type": "string",
+                "description": "The Classic Infrastructure API user name\n"
+            },
+            "iamProfileId": {
+                "type": "string",
+                "description": "IAM Trusted Profile Authentication token\n"
+            },
+            "iamRefreshToken": {
+                "type": "string",
+                "description": "IAM Authentication refresh token\n"
+            },
+            "iamToken": {
+                "type": "string",
+                "description": "IAM Authentication token\n"
+            },
+            "ibmcloudApiKey": {
+                "type": "string",
+                "description": "The IBM Cloud API Key\n"
+            },
+            "ibmcloudTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any IBM Cloud API calls made.\n"
+            },
+            "maxRetries": {
+                "type": "integer",
+                "description": "The retry count to set for API calls.\n"
+            },
+            "region": {
+                "type": "string",
+                "description": "The IBM cloud Region (for example 'us-south').\n"
+            },
+            "resourceGroup": {
+                "type": "string",
+                "description": "The Resource group id.\n"
+            },
+            "riaasEndpoint": {
+                "type": "string",
+                "description": "The next generation infrastructure service endpoint url.\n",
+                "deprecationMessage": "This field is deprecated use generation"
+            },
+            "softlayerApiKey": {
+                "type": "string",
+                "description": "The SoftLayer API Key\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_api_key"
+            },
+            "softlayerEndpointUrl": {
+                "type": "string",
+                "description": "The Softlayer Endpoint\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_endpoint_url"
+            },
+            "softlayerTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any SoftLayer API calls made.\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_timeout"
+            },
+            "softlayerUsername": {
+                "type": "string",
+                "description": "The SoftLayer user name\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_username"
+            },
+            "visibility": {
+                "type": "string",
+                "description": "Visibility of the provider if it is private or public.\n"
+            },
+            "zone": {
+                "type": "string",
+                "description": "The IBM cloud Region zone (for example 'us-south-1') for power resources.\n"
+            }
+        }
+    },
+    "provider": {
+        "description": "The provider type for the ibm package. By default, resources use package-wide configuration\nsettings, however an explicit `Provider` instance may be created and passed during resource\nconstruction to achieve fine-grained programmatic control over provider settings. See the\n[documentation](https://www.pulumi.com/docs/reference/programming-model/#providers) for more information.\n",
+        "properties": {
+            "bluemixApiKey": {
+                "type": "string",
+                "description": "The Bluemix API Key\n",
+                "deprecationMessage": "This field is deprecated please use ibmcloud_api_key"
+            },
+            "bluemixTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any Bluemix API calls made.\n",
+                "deprecationMessage": "This field is deprecated please use ibmcloud_timeout"
+            },
+            "endpointsFilePath": {
+                "type": "string",
+                "description": "Path of the file that contains private and public regional endpoints mapping\n"
+            },
+            "functionNamespace": {
+                "type": "string",
+                "description": "The IBM Cloud Function namespace\n",
+                "deprecationMessage": "This field will be deprecated soon"
+            },
+            "generation": {
+                "type": "integer",
+                "description": "Generation of Virtual Private Cloud. Default is 2\n",
+                "deprecationMessage": "The generation field is deprecated and will be removed after couple of releases"
+            },
+            "iaasClassicApiKey": {
+                "type": "string",
+                "description": "The Classic Infrastructure API Key\n"
+            },
+            "iaasClassicEndpointUrl": {
+                "type": "string",
+                "description": "The Classic Infrastructure Endpoint\n"
+            },
+            "iaasClassicTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any Classic Infrastructure API calls made.\n"
+            },
+            "iaasClassicUsername": {
+                "type": "string",
+                "description": "The Classic Infrastructure API user name\n"
+            },
+            "iamProfileId": {
+                "type": "string",
+                "description": "IAM Trusted Profile Authentication token\n"
+            },
+            "iamRefreshToken": {
+                "type": "string",
+                "description": "IAM Authentication refresh token\n"
+            },
+            "iamToken": {
+                "type": "string",
+                "description": "IAM Authentication token\n"
+            },
+            "ibmcloudApiKey": {
+                "type": "string",
+                "description": "The IBM Cloud API Key\n"
+            },
+            "ibmcloudTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any IBM Cloud API calls made.\n"
+            },
+            "maxRetries": {
+                "type": "integer",
+                "description": "The retry count to set for API calls.\n"
+            },
+            "region": {
+                "type": "string",
+                "description": "The IBM cloud Region (for example 'us-south').\n"
+            },
+            "resourceGroup": {
+                "type": "string",
+                "description": "The Resource group id.\n"
+            },
+            "riaasEndpoint": {
+                "type": "string",
+                "description": "The next generation infrastructure service endpoint url.\n",
+                "deprecationMessage": "This field is deprecated use generation"
+            },
+            "softlayerApiKey": {
+                "type": "string",
+                "description": "The SoftLayer API Key\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_api_key"
+            },
+            "softlayerEndpointUrl": {
+                "type": "string",
+                "description": "The Softlayer Endpoint\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_endpoint_url"
+            },
+            "softlayerTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any SoftLayer API calls made.\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_timeout"
+            },
+            "softlayerUsername": {
+                "type": "string",
+                "description": "The SoftLayer user name\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_username"
+            },
+            "visibility": {
+                "type": "string",
+                "description": "Visibility of the provider if it is private or public.\n"
+            },
+            "zone": {
+                "type": "string",
+                "description": "The IBM cloud Region zone (for example 'us-south-1') for power resources.\n"
+            }
+        },
+        "inputProperties": {
+            "bluemixApiKey": {
+                "type": "string",
+                "description": "The Bluemix API Key\n",
+                "deprecationMessage": "This field is deprecated please use ibmcloud_api_key"
+            },
+            "bluemixTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any Bluemix API calls made.\n",
+                "deprecationMessage": "This field is deprecated please use ibmcloud_timeout"
+            },
+            "endpointsFilePath": {
+                "type": "string",
+                "description": "Path of the file that contains private and public regional endpoints mapping\n"
+            },
+            "functionNamespace": {
+                "type": "string",
+                "description": "The IBM Cloud Function namespace\n",
+                "deprecationMessage": "This field will be deprecated soon"
+            },
+            "generation": {
+                "type": "integer",
+                "description": "Generation of Virtual Private Cloud. Default is 2\n",
+                "deprecationMessage": "The generation field is deprecated and will be removed after couple of releases"
+            },
+            "iaasClassicApiKey": {
+                "type": "string",
+                "description": "The Classic Infrastructure API Key\n"
+            },
+            "iaasClassicEndpointUrl": {
+                "type": "string",
+                "description": "The Classic Infrastructure Endpoint\n"
+            },
+            "iaasClassicTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any Classic Infrastructure API calls made.\n"
+            },
+            "iaasClassicUsername": {
+                "type": "string",
+                "description": "The Classic Infrastructure API user name\n"
+            },
+            "iamProfileId": {
+                "type": "string",
+                "description": "IAM Trusted Profile Authentication token\n"
+            },
+            "iamRefreshToken": {
+                "type": "string",
+                "description": "IAM Authentication refresh token\n"
+            },
+            "iamToken": {
+                "type": "string",
+                "description": "IAM Authentication token\n"
+            },
+            "ibmcloudApiKey": {
+                "type": "string",
+                "description": "The IBM Cloud API Key\n"
+            },
+            "ibmcloudTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any IBM Cloud API calls made.\n"
+            },
+            "maxRetries": {
+                "type": "integer",
+                "description": "The retry count to set for API calls.\n"
+            },
+            "region": {
+                "type": "string",
+                "description": "The IBM cloud Region (for example 'us-south').\n"
+            },
+            "resourceGroup": {
+                "type": "string",
+                "description": "The Resource group id.\n"
+            },
+            "riaasEndpoint": {
+                "type": "string",
+                "description": "The next generation infrastructure service endpoint url.\n",
+                "deprecationMessage": "This field is deprecated use generation"
+            },
+            "softlayerApiKey": {
+                "type": "string",
+                "description": "The SoftLayer API Key\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_api_key"
+            },
+            "softlayerEndpointUrl": {
+                "type": "string",
+                "description": "The Softlayer Endpoint\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_endpoint_url"
+            },
+            "softlayerTimeout": {
+                "type": "integer",
+                "description": "The timeout (in seconds) to set for any SoftLayer API calls made.\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_timeout"
+            },
+            "softlayerUsername": {
+                "type": "string",
+                "description": "The SoftLayer user name\n",
+                "deprecationMessage": "This field is deprecated please use iaas_classic_username"
+            },
+            "visibility": {
+                "type": "string",
+                "description": "Visibility of the provider if it is private or public.\n"
+            },
+            "zone": {
+                "type": "string",
+                "description": "The IBM cloud Region zone (for example 'us-south-1') for power resources.\n"
+            }
+        }
+    }
+}
