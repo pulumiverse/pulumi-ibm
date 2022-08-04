@@ -738,7 +738,7 @@ func Provider() tfbridge.ProviderInfo {
 			"ibm_is_bare_metal_servers":         {Tok: tfbridge.MakeDataSource(mainPkg, "vpcInfrastructure", "getIsBareMetalServers")},
 			"ibm_is_dedicated_host":             {Tok: tfbridge.MakeDataSource(mainPkg, "vpcInfrastructure", "getIsDedicatedHost")},
 			// "ibm_is_dedicated_host_disk":        {Tok: tfbridge.MakeDataSource(mainPkg, "vpcInfrastructure", "getIsDedicatedHostDisk")},
-			// "ibm_is_dedicated_host_disks":       {Tok: tfbridge.MakeDataSource(mainPkg, "vpcInfrastructure", "getIsDedicatedHostDisks")},
+			"ibm_is_dedicated_host_disks":                    {Tok: tfbridge.MakeDataSource(mainPkg, "vpcInfrastructure", "getIsDedicatedHostDisks")},
 			"ibm_is_dedicated_host_group":                    {Tok: tfbridge.MakeDataSource(mainPkg, "vpcInfrastructure", "getIsDedicatedHostGroup")},
 			"ibm_is_dedicated_host_groups":                   {Tok: tfbridge.MakeDataSource(mainPkg, "vpcInfrastructure", "getIsDedicatedHostGroups")},
 			"ibm_is_dedicated_host_profile":                  {Tok: tfbridge.MakeDataSource(mainPkg, "vpcInfrastructure", "getIsDedicatedHostProfile")},
