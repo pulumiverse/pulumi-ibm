@@ -5,12 +5,12 @@ go 1.18
 replace (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible => github.com/golang-jwt/jwt v3.2.1+incompatible
 	github.com/hashicorp/go-getter v1.5.0 => github.com/hashicorp/go-getter v1.4.0
-	github.com/hashicorp/terraform-plugin-sdk/v2 => github.com/pulumi/terraform-plugin-sdk/v2 v2.0.0-20220505215311-795430389fa7
+	github.com/hashicorp/terraform-plugin-sdk/v2 => github.com/pulumi/terraform-plugin-sdk/v2 v2.0.0-20220725190814-23001ad6ec03
 	github.com/softlayer/softlayer-go v1.0.3 => github.com/IBM-Cloud/softlayer-go v1.0.5-tf
 )
 
 require (
-	github.com/IBM-Cloud/terraform-provider-ibm v1.43.0
+	github.com/IBM-Cloud/terraform-provider-ibm v1.44.1
 	github.com/pulumi/pulumi-terraform-bridge/v3 v3.26.1
 	github.com/pulumi/pulumi/sdk/v3 v3.36.0
 )
@@ -115,13 +115,13 @@ require (
 	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
 	github.com/hashicorp/go-safetemp v1.0.0 // indirect
 	github.com/hashicorp/go-sockaddr v1.0.2 // indirect
-	github.com/hashicorp/hc-install v0.3.1 // indirect
+	github.com/hashicorp/hc-install v0.4.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.13.0 // indirect
 	github.com/hashicorp/hil v0.0.0-20190212132231-97b3a9cdfa93 // indirect
 	github.com/hashicorp/logutils v1.0.0 // indirect
-	github.com/hashicorp/terraform-exec v0.16.0 // indirect
-	github.com/hashicorp/terraform-json v0.13.0 // indirect
+	github.com/hashicorp/terraform-exec v0.17.2 // indirect
+	github.com/hashicorp/terraform-json v0.14.0 // indirect
 	github.com/hashicorp/terraform-plugin-go v0.12.0 // indirect
 	github.com/hashicorp/terraform-plugin-log v0.6.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk v1.7.0 // indirect
@@ -247,7 +247,7 @@ require (
 
 require (
 	github.com/IBM-Cloud/bluemix-go v0.0.0-20220523145737-34645883de47 // indirect
-	github.com/IBM-Cloud/container-services-go-sdk v0.0.0-20210705152127-41ca00fc9a62 // indirect
+	github.com/IBM-Cloud/container-services-go-sdk v0.0.0-20220622142911-811d18c8c775 // indirect
 	github.com/IBM-Cloud/power-go-client v1.1.10 // indirect
 	github.com/IBM/apigateway-go-sdk v0.0.0-20210714141226-a5d5d49caaca // indirect
 	github.com/IBM/appconfiguration-go-admin-sdk v0.2.3 // indirect
@@ -259,7 +259,7 @@ require (
 	github.com/IBM/event-notifications-go-admin-sdk v0.1.2 // indirect
 	github.com/IBM/eventstreams-go-sdk v1.2.0 // indirect
 	github.com/IBM/go-sdk-core/v5 v5.10.1 // indirect
-	github.com/IBM/ibm-cos-sdk-go v1.8.0 // indirect
+	github.com/IBM/ibm-cos-sdk-go v1.9.0 // indirect
 	github.com/IBM/ibm-cos-sdk-go-config v1.2.0 // indirect
 	github.com/IBM/ibm-hpcs-tke-sdk v0.0.0-20211109141421-a4b61b05f7d1 // indirect
 	github.com/IBM/ibm-hpcs-uko-sdk v0.0.4 // indirect
@@ -271,12 +271,13 @@ require (
 	github.com/IBM/scc-go-sdk/v3 v3.1.6 // indirect
 	github.com/IBM/schematics-go-sdk v0.1.3 // indirect
 	github.com/IBM/secrets-manager-go-sdk v0.1.19 // indirect
-	github.com/IBM/vpc-go-sdk v0.21.0 // indirect
+	github.com/IBM/vpc-go-sdk v0.22.0 // indirect
 	github.com/ScaleFT/sshkeys v0.0.0-20200327173127-6142f742bca5 // indirect
 	github.com/Shopify/sarama v1.29.1 // indirect
 	github.com/apache/openwhisk-client-go v0.0.0-20200201143223-a804fb82d105 // indirect
 	github.com/apparentlymart/go-cidr v1.1.0 // indirect
 	github.com/cloudfoundry/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21 // indirect
+	github.com/edsrzf/mmap-go v1.1.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-openapi/strfmt v0.21.2 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
@@ -285,11 +286,12 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.19.0 // indirect
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.20.0 // indirect
 	github.com/hokaccha/go-prettyjson v0.0.0-20170213120834-e6b9231a2b1c // indirect
 	github.com/jinzhu/copier v0.3.2 // indirect
 	github.com/minsikl/netscaler-nitro-go v0.0.0-20170827154432-5b14ce3643e3 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
+	github.com/natefinch/atomic v1.0.1 // indirect
 	github.com/softlayer/softlayer-go v1.0.3 // indirect
 	golang.org/x/crypto v0.0.0-20220517005047-85d78b3ac167 // indirect
 	google.golang.org/genproto v0.0.0-20220405205423-9d709892a2bf // indirect

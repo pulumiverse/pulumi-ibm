@@ -2,7 +2,7 @@
 
 This repository contains boilerplate code for building a new Pulumi provider which wraps an existing Terraform provider.  
 
-### Background
+## Background
 This repository is part of the [guide for authoring and publishing a Pulumi Package](https://www.pulumi.com/docs/guides/pulumi-packages/how-to-author).
 
 Learn about the concepts behind [Pulumi Packages](https://www.pulumi.com/docs/guides/pulumi-packages/#pulumi-packages).
@@ -10,6 +10,7 @@ Learn about the concepts behind [Pulumi Packages](https://www.pulumi.com/docs/gu
 ## Creating a Pulumi Terraform Bridge Provider
 
 The following instructions cover:
+
 - providers maintained by Pulumi (denoted with a "Pulumi Official" checkmark on the Pulumi registry)
 - providers published and maintained by the Pulumi community, referred to as "third-party" providers
 
