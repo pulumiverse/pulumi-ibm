@@ -17,12 +17,15 @@ package ibm
 import (
 	"fmt"
 	"path/filepath"
+	"strings"
+	"unicode"
 
 	ibm "github.com/IBM-Cloud/terraform-provider-ibm/ibm/provider"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
 	shim "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim"
 	shimv2 "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfshim/sdk-v2"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 	"github.com/pulumiverse/pulumi-ibm/provider/pkg/version"
 )
 
@@ -32,8 +35,47 @@ const (
 	// registries for nodejs and python:
 	mainPkg = "ibm"
 	// modules:
-	mainMod = "index" // the ibm module
+	mainMod          = "index" // the root index
+	apiGateway       = "ApiGateway"
+	appConfiguration = "AppConfiguration"
+	appIdManagement  = "AppIdManagement"
+	cloudFoundry     = "CloudFoundry"
 )
+
+var namespaceMap = map[string]string{
+	mainPkg: "Ibm",
+}
+
+// ibmMember manufactures a type token for the IBM package and the given module, file name, and type.
+func ibmMember(moduleTitle string, fn string, mem string) tokens.ModuleMember {
+	moduleName := strings.ToLower(moduleTitle)
+	namespaceMap[moduleName] = moduleTitle
+	return tokens.ModuleMember(mainPkg + ":" + moduleName + ":" + mem)
+}
+
+// ibmType manufactures a type token for the IBM package and the given module, file name, and type.
+func ibmType(mod string, fn string, typ string) tokens.Type {
+	return tokens.Type(ibmMember(mod, fn, typ))
+}
+
+// ibmTypeDefaultFile manufactures a standard resource token given a module and resource name.  It automatically uses the IBM
+// package and names the file by simply lower casing the type's first character.
+func ibmTypeDefaultFile(mod string, typ string) tokens.Type {
+	fn := string(unicode.ToLower(rune(typ[0]))) + typ[1:]
+	return ibmType(mod, fn, typ)
+}
+
+// ibmDataSource manufactures a standard resource token given a module and resource name.  It automatically uses the IBM
+// package and names the file by simply lower casing the data source's first character.
+func ibmDataSource(mod string, res string) tokens.ModuleMember {
+	fn := string(unicode.ToLower(rune(res[0]))) + res[1:]
+	return ibmMember(mod, fn, res)
+}
+
+// ibmResource manufactures a standard resource token given a module and resource name.
+func ibmResource(mod string, res string) tokens.Type {
+	return ibmTypeDefaultFile(mod, res)
+}
 
 // preConfigureCallback is called before the providerConfigure function of the underlying provider.
 // It should validate that the provider can be configured, and provide actionable errors in the case
@@ -83,7 +125,7 @@ func Provider() tfbridge.ProviderInfo {
 		GitHubOrg: "IBM-Cloud",
 		Config: map[string]*tfbridge.SchemaInfo{
 			"region": {
-				Type: tfbridge.MakeType(mainPkg, "region", "Region"),
+				Type: ibmTypeDefaultFile(mainMod, "Region"),
 				Default: &tfbridge.DefaultInfo{
 					EnvVars: []string{"IBM_REGION", "IBM_DEFAULT_REGION"},
 				},
@@ -91,37 +133,37 @@ func Provider() tfbridge.ProviderInfo {
 		},
 		PreConfigureCallback: preConfigureCallback,
 		Resources: map[string]*tfbridge.ResourceInfo{
-			"ibm_api_gateway_endpoint":                 {Tok: tfbridge.MakeResource(mainPkg, "apiGateway", "ApiGatewayEndpoint")},
-			"ibm_api_gateway_endpoint_subscription":    {Tok: tfbridge.MakeResource(mainPkg, "apiGateway", "ApiGatewayEndpointSubscription")},
-			"ibm_app":                                  {Tok: tfbridge.MakeResource(mainPkg, "cloudFoundry", "App")},
-			"ibm_app_config_environment":               {Tok: tfbridge.MakeResource(mainPkg, "appConfiguration", "AppConfigEnvironment")},
-			"ibm_app_config_feature":                   {Tok: tfbridge.MakeResource(mainPkg, "appConfiguration", "AppConfigFeature")},
-			"ibm_app_domain_private":                   {Tok: tfbridge.MakeResource(mainPkg, "cloudFoundry", "AppDomainPrivate")},
-			"ibm_app_domain_shared":                    {Tok: tfbridge.MakeResource(mainPkg, "cloudFoundry", "AppDomainShared")},
-			"ibm_app_route":                            {Tok: tfbridge.MakeResource(mainPkg, "cloudFoundry", "AppRoute")},
-			"ibm_appid_action_url":                     {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidActionUrl")},
-			"ibm_appid_apm":                            {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidApm")},
-			"ibm_appid_application":                    {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidApplication")},
-			"ibm_appid_application_roles":              {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidApplicationRoles")},
-			"ibm_appid_application_scopes":             {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidApplicationScopes")},
-			"ibm_appid_audit_status":                   {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidAuditStatus")},
-			"ibm_appid_cloud_directory_template":       {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidCloudDirectoryTemplate")},
-			"ibm_appid_cloud_directory_user":           {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidCloudDirectoryUser")},
-			"ibm_appid_idp_cloud_directory":            {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidIdpCloudDirectory")},
-			"ibm_appid_idp_custom":                     {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidIdpCustom")},
-			"ibm_appid_idp_facebook":                   {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidIdpFacebook")},
-			"ibm_appid_idp_google":                     {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidIdpGoogle")},
-			"ibm_appid_idp_saml":                       {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidIdpSaml")},
-			"ibm_appid_languages":                      {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidLanguages")},
-			"ibm_appid_mfa":                            {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidMfa")},
-			"ibm_appid_mfa_channel":                    {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidMfaChannel")},
-			"ibm_appid_password_regex":                 {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidPasswordRegex")},
-			"ibm_appid_redirect_urls":                  {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidRedirectUrls")},
-			"ibm_appid_role":                           {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidRole")},
-			"ibm_appid_theme_color":                    {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidThemeColor")},
-			"ibm_appid_theme_text":                     {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidThemeText")},
-			"ibm_appid_token_config":                   {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidTokenConfig")},
-			"ibm_appid_user_roles":                     {Tok: tfbridge.MakeResource(mainPkg, "appIdManagement", "AppidUserRoles")},
+			"ibm_api_gateway_endpoint":                 {Tok: ibmResource(apiGateway, "Endpoint")},
+			"ibm_api_gateway_endpoint_subscription":    {Tok: ibmResource(apiGateway, "EndpointSubscription")},
+			"ibm_app_config_environment":               {Tok: ibmResource(appConfiguration, "Environment")},
+			"ibm_app_config_feature":                   {Tok: ibmResource(appConfiguration, "Feature")},
+			"ibm_app":                                  {Tok: ibmResource(cloudFoundry, "App")},
+			"ibm_app_domain_private":                   {Tok: ibmResource(cloudFoundry, "AppDomainPrivate")},
+			"ibm_app_domain_shared":                    {Tok: ibmResource(cloudFoundry, "AppDomainShared")},
+			"ibm_app_route":                            {Tok: ibmResource(cloudFoundry, "AppRoute")},
+			"ibm_appid_action_url":                     {Tok: ibmResource(appIdManagement, "ActionUrl")},
+			"ibm_appid_apm":                            {Tok: ibmResource(appIdManagement, "Apm")},
+			"ibm_appid_application":                    {Tok: ibmResource(appIdManagement, "Application")},
+			"ibm_appid_application_roles":              {Tok: ibmResource(appIdManagement, "ApplicationRoles")},
+			"ibm_appid_application_scopes":             {Tok: ibmResource(appIdManagement, "ApplicationScopes")},
+			"ibm_appid_audit_status":                   {Tok: ibmResource(appIdManagement, "AuditStatus")},
+			"ibm_appid_cloud_directory_template":       {Tok: ibmResource(appIdManagement, "CloudDirectoryTemplate")},
+			"ibm_appid_cloud_directory_user":           {Tok: ibmResource(appIdManagement, "CloudDirectoryUser")},
+			"ibm_appid_idp_cloud_directory":            {Tok: ibmResource(appIdManagement, "IdpCloudDirectory")},
+			"ibm_appid_idp_custom":                     {Tok: ibmResource(appIdManagement, "IdpCustom")},
+			"ibm_appid_idp_facebook":                   {Tok: ibmResource(appIdManagement, "IdpFacebook")},
+			"ibm_appid_idp_google":                     {Tok: ibmResource(appIdManagement, "IdpGoogle")},
+			"ibm_appid_idp_saml":                       {Tok: ibmResource(appIdManagement, "IdpSaml")},
+			"ibm_appid_languages":                      {Tok: ibmResource(appIdManagement, "Languages")},
+			"ibm_appid_mfa":                            {Tok: ibmResource(appIdManagement, "Mfa")},
+			"ibm_appid_mfa_channel":                    {Tok: ibmResource(appIdManagement, "MfaChannel")},
+			"ibm_appid_password_regex":                 {Tok: ibmResource(appIdManagement, "PasswordRegex")},
+			"ibm_appid_redirect_urls":                  {Tok: ibmResource(appIdManagement, "RedirectUrls")},
+			"ibm_appid_role":                           {Tok: ibmResource(appIdManagement, "Role")},
+			"ibm_appid_theme_color":                    {Tok: ibmResource(appIdManagement, "ThemeColor")},
+			"ibm_appid_theme_text":                     {Tok: ibmResource(appIdManagement, "ThemeText")},
+			"ibm_appid_token_config":                   {Tok: ibmResource(appIdManagement, "TokenConfig")},
+			"ibm_appid_user_roles":                     {Tok: ibmResource(appIdManagement, "UserRoles")},
 			"ibm_atracker_route":                       {Tok: tfbridge.MakeResource(mainPkg, "activityTracker", "AtrackerRoute")},
 			"ibm_atracker_settings":                    {Tok: tfbridge.MakeResource(mainPkg, "activityTracker", "AtrackerSettings")},
 			"ibm_atracker_target":                      {Tok: tfbridge.MakeResource(mainPkg, "activityTracker", "AtrackerTarget")},
@@ -498,42 +540,42 @@ func Provider() tfbridge.ProviderInfo {
 			"ibm_tg_route_report":             {Tok: tfbridge.MakeResource(mainPkg, "transitGateway", "TgRouteReport")},
 		},
 		DataSources: map[string]*tfbridge.DataSourceInfo{
-			"ibm_account":                              {Tok: tfbridge.MakeDataSource(mainPkg, "cloudFoundry", "getAccount")},
-			"ibm_api_gateway":                          {Tok: tfbridge.MakeDataSource(mainPkg, "apiGateway", "getApiGateway")},
-			"ibm_app":                                  {Tok: tfbridge.MakeDataSource(mainPkg, "cloudFoundry", "getApp")},
-			"ibm_app_config_environment":               {Tok: tfbridge.MakeDataSource(mainPkg, "appConfiguration", "getAppConfigEnvironment")},
-			"ibm_app_config_environments":              {Tok: tfbridge.MakeDataSource(mainPkg, "appConfiguration", "getAppConfigEnvironments")},
-			"ibm_app_config_feature":                   {Tok: tfbridge.MakeDataSource(mainPkg, "appConfiguration", "getAppConfigFeature")},
-			"ibm_app_config_features":                  {Tok: tfbridge.MakeDataSource(mainPkg, "appConfiguration", "getAppConfigFeatures")},
-			"ibm_app_domain_private":                   {Tok: tfbridge.MakeDataSource(mainPkg, "cloudFoundry", "getAppDomainPrivate")},
-			"ibm_app_domain_shared":                    {Tok: tfbridge.MakeDataSource(mainPkg, "cloudFoundry", "getAppDomainShared")},
-			"ibm_app_route":                            {Tok: tfbridge.MakeDataSource(mainPkg, "cloudFoundry", "getAppRoute")},
-			"ibm_appid_action_url":                     {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidActionUrl")},
-			"ibm_appid_apm":                            {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidApm")},
-			"ibm_appid_application":                    {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidApplication")},
-			"ibm_appid_application_roles":              {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidApplicationRoles")},
-			"ibm_appid_application_scopes":             {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidApplicationScopes")},
-			"ibm_appid_applications":                   {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidApplications")},
-			"ibm_appid_audit_status":                   {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidAuditStatus")},
-			"ibm_appid_cloud_directory_template":       {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidCloudDirectoryTemplate")},
-			"ibm_appid_cloud_directory_user":           {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidCloudDirectoryUser")},
-			"ibm_appid_idp_cloud_directory":            {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidIdpCloudDirectory")},
-			"ibm_appid_idp_custom":                     {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidIdpCustom")},
-			"ibm_appid_idp_facebook":                   {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidIdpFacebook")},
-			"ibm_appid_idp_google":                     {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidIdpGoogle")},
-			"ibm_appid_idp_saml":                       {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidIdpSaml")},
-			"ibm_appid_idp_saml_metadata":              {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidIdpSamlMetadata")},
-			"ibm_appid_languages":                      {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidLanguages")},
-			"ibm_appid_mfa":                            {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidMfa")},
-			"ibm_appid_mfa_channel":                    {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidMfaChannel")},
-			"ibm_appid_password_regex":                 {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidPasswordRegex")},
-			"ibm_appid_redirect_urls":                  {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidRedirectUrls")},
-			"ibm_appid_role":                           {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidRole")},
-			"ibm_appid_roles":                          {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidRoles")},
-			"ibm_appid_theme_color":                    {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidThemeColor")},
-			"ibm_appid_theme_text":                     {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidThemeText")},
-			"ibm_appid_token_config":                   {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidTokenConfig")},
-			"ibm_appid_user_roles":                     {Tok: tfbridge.MakeDataSource(mainPkg, "appIdManagement", "getAppidUserRoles")},
+			"ibm_account":                              {Tok: ibmDataSource(cloudFoundry, "getAccount")},
+			"ibm_api_gateway":                          {Tok: ibmDataSource(apiGateway, "getGateway")},
+			"ibm_app_config_environment":               {Tok: ibmDataSource(appConfiguration, "getEnvironment")},
+			"ibm_app_config_environments":              {Tok: ibmDataSource(appConfiguration, "getEnvironments")},
+			"ibm_app_config_feature":                   {Tok: ibmDataSource(appConfiguration, "getFeature")},
+			"ibm_app_config_features":                  {Tok: ibmDataSource(appConfiguration, "getFeatures")},
+			"ibm_app":                                  {Tok: ibmDataSource(cloudFoundry, "getApp")},
+			"ibm_app_domain_private":                   {Tok: ibmDataSource(cloudFoundry, "getDomainPrivate")},
+			"ibm_app_domain_shared":                    {Tok: ibmDataSource(cloudFoundry, "getDomainShared")},
+			"ibm_app_route":                            {Tok: ibmDataSource(cloudFoundry, "getRoute")},
+			"ibm_appid_action_url":                     {Tok: ibmDataSource(appIdManagement, "getActionUrl")},
+			"ibm_appid_apm":                            {Tok: ibmDataSource(appIdManagement, "getApm")},
+			"ibm_appid_application":                    {Tok: ibmDataSource(appIdManagement, "getApplication")},
+			"ibm_appid_application_roles":              {Tok: ibmDataSource(appIdManagement, "getApplicationRoles")},
+			"ibm_appid_application_scopes":             {Tok: ibmDataSource(appIdManagement, "getApplicationScopes")},
+			"ibm_appid_applications":                   {Tok: ibmDataSource(appIdManagement, "getApplications")},
+			"ibm_appid_audit_status":                   {Tok: ibmDataSource(appIdManagement, "getAuditStatus")},
+			"ibm_appid_cloud_directory_template":       {Tok: ibmDataSource(appIdManagement, "getCloudDirectoryTemplate")},
+			"ibm_appid_cloud_directory_user":           {Tok: ibmDataSource(appIdManagement, "getCloudDirectoryUser")},
+			"ibm_appid_idp_cloud_directory":            {Tok: ibmDataSource(appIdManagement, "getIdpCloudDirectory")},
+			"ibm_appid_idp_custom":                     {Tok: ibmDataSource(appIdManagement, "getIdpCustom")},
+			"ibm_appid_idp_facebook":                   {Tok: ibmDataSource(appIdManagement, "getIdpFacebook")},
+			"ibm_appid_idp_google":                     {Tok: ibmDataSource(appIdManagement, "getIdpGoogle")},
+			"ibm_appid_idp_saml":                       {Tok: ibmDataSource(appIdManagement, "getIdpSaml")},
+			"ibm_appid_idp_saml_metadata":              {Tok: ibmDataSource(appIdManagement, "getIdpSamlMetadata")},
+			"ibm_appid_languages":                      {Tok: ibmDataSource(appIdManagement, "getLanguages")},
+			"ibm_appid_mfa":                            {Tok: ibmDataSource(appIdManagement, "getMfa")},
+			"ibm_appid_mfa_channel":                    {Tok: ibmDataSource(appIdManagement, "getMfaChannel")},
+			"ibm_appid_password_regex":                 {Tok: ibmDataSource(appIdManagement, "getPasswordRegex")},
+			"ibm_appid_redirect_urls":                  {Tok: ibmDataSource(appIdManagement, "getRedirectUrls")},
+			"ibm_appid_role":                           {Tok: ibmDataSource(appIdManagement, "getRole")},
+			"ibm_appid_roles":                          {Tok: ibmDataSource(appIdManagement, "getRoles")},
+			"ibm_appid_theme_color":                    {Tok: ibmDataSource(appIdManagement, "getThemeColor")},
+			"ibm_appid_theme_text":                     {Tok: ibmDataSource(appIdManagement, "getThemeText")},
+			"ibm_appid_token_config":                   {Tok: ibmDataSource(appIdManagement, "getTokenConfig")},
+			"ibm_appid_user_roles":                     {Tok: ibmDataSource(appIdManagement, "getUserRoles")},
 			"ibm_atracker_endpoints":                   {Tok: tfbridge.MakeDataSource(mainPkg, "activityTracker", "getAtrackerEndpoints")},
 			"ibm_atracker_routes":                      {Tok: tfbridge.MakeDataSource(mainPkg, "activityTracker", "getAtrackerRoutes")},
 			"ibm_atracker_targets":                     {Tok: tfbridge.MakeDataSource(mainPkg, "activityTracker", "getAtrackerTargets")},
