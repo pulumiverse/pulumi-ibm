@@ -39,6 +39,7 @@ const (
 	apiGateway       = "ApiGateway"
 	appConfiguration = "AppConfiguration"
 	appIdManagement  = "AppIdManagement"
+	activityTracker  = "ActivityTracker"
 	cloudFoundry     = "CloudFoundry"
 )
 
@@ -164,7 +165,7 @@ func Provider() tfbridge.ProviderInfo {
 			"ibm_appid_theme_text":                     {Tok: ibmResource(appIdManagement, "ThemeText")},
 			"ibm_appid_token_config":                   {Tok: ibmResource(appIdManagement, "TokenConfig")},
 			"ibm_appid_user_roles":                     {Tok: ibmResource(appIdManagement, "UserRoles")},
-			"ibm_atracker_route":                       {Tok: tfbridge.MakeResource(mainPkg, "activityTracker", "AtrackerRoute")},
+			"ibm_atracker_route":                       {Tok: ibmResource(activityTracker, "Route")},
 			"ibm_atracker_settings":                    {Tok: tfbridge.MakeResource(mainPkg, "activityTracker", "AtrackerSettings")},
 			"ibm_atracker_target":                      {Tok: tfbridge.MakeResource(mainPkg, "activityTracker", "AtrackerTarget")},
 			"ibm_cbr_rule":                             {Tok: tfbridge.MakeResource(mainPkg, "contextBasedRestrictions", "CbrRule")},
@@ -576,7 +577,7 @@ func Provider() tfbridge.ProviderInfo {
 			"ibm_appid_theme_text":                     {Tok: ibmDataSource(appIdManagement, "getThemeText")},
 			"ibm_appid_token_config":                   {Tok: ibmDataSource(appIdManagement, "getTokenConfig")},
 			"ibm_appid_user_roles":                     {Tok: ibmDataSource(appIdManagement, "getUserRoles")},
-			"ibm_atracker_endpoints":                   {Tok: tfbridge.MakeDataSource(mainPkg, "activityTracker", "getAtrackerEndpoints")},
+			"ibm_atracker_endpoints":                   {Tok: ibmDataSource(activityTracker, "getEndpoints")},
 			"ibm_atracker_routes":                      {Tok: tfbridge.MakeDataSource(mainPkg, "activityTracker", "getAtrackerRoutes")},
 			"ibm_atracker_targets":                     {Tok: tfbridge.MakeDataSource(mainPkg, "activityTracker", "getAtrackerTargets")},
 			"ibm_cbr_rule":                             {Tok: tfbridge.MakeDataSource(mainPkg, "contextBasedRestrictions", "getCbrRule")},
@@ -1023,6 +1024,7 @@ func Provider() tfbridge.ProviderInfo {
 			PackageReferences: map[string]string{
 				"Pulumi": "3.*",
 			},
+			Namespaces: namespaceMap,
 		},
 	}
 
